@@ -1,0 +1,125 @@
+<div class="sign-in container">
+    <div class="row justify-content-center">
+        <div class="card border-0 rounded-3 p-0">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <h1 class="h3 fw-semibold mb-1">Sign in</h1>
+                    <p class="text-body-secondary small mb-0">Welcome back to the messaging app</p>
+                </div>
+
+                @if (signInError) {
+                <div class="alert alert-danger py-2 small" role="alert">
+                    {{ signInError }}
+                </div>
+                }
+
+                <div role="tablist" aria-orientation="horizontal" data-slot="tabs-list"
+                    class="bg-muted text-muted-foreground items-center justify-center rounded-xl grid w-full grid-cols-2 mb-6"
+                    tabindex="0" data-orientation="horizontal" style="outline: currentcolor;"
+                    [style.--tabs-count]="2" [style.--tabs-height]="24" [style.--tabs-padding-height]="4" [style.--tabs-padding-width]="24">
+                    <button type="button" role="tab" [attr.aria-selected]="method==='email'"
+                        aria-controls="radix-:rl:-content-email" id="radix-:rl:-trigger-email"
+                        data-slot="tabs-trigger" [attr.data-state]="method==='email' ? 'active' : 'inactive'"
+                        tabindex="{{ method==='email' ? 0 : -1 }}" (click)="switchMethod('email')">
+                        Email
+                    </button>
+                    <button type="button" role="tab" [attr.aria-selected]="method==='phone'"
+                        aria-controls="radix-:rl:-content-phone" id="radix-:rl:-trigger-phone"
+                        data-slot="tabs-trigger" [attr.data-state]="method==='phone' ? 'active' : 'inactive'"
+                        tabindex="{{ method==='phone' ? 0 : -1 }}" (click)="switchMethod('phone')">
+                        Phone
+                    </button>
+                    <div class="tabs-indicator" [attr.data-pos]="method === 'email' ? '0' : 1"
+                        [style.--tab-index]="method === 'email' ? 0 : 1"></div>
+                </div>
+
+                <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" novalidate>
+                    @if (method === 'email') {
+                    <div class="mb-3">
+                        <label for="sign-in-email" class="form-label">Email</label>
+                        <input id="sign-in-email" type="email" class="form-control" formControlName="email"
+                            placeholder="you@example.com" autocomplete="email"
+                            [class.is-invalid]="submitted && email?.invalid" />
+                        @if (submitted && email?.invalid && email?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (email?.errors?.['required']) {
+                            <div>Email is required.</div>
+                            }
+                            @if (email?.errors?.['email']) {
+                            <div>Enter a valid email address.</div>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sign-in-password" class="form-label">Password</label>
+                        <input id="sign-in-password" type="password" class="form-control" formControlName="password"
+                            placeholder="••••••••" autocomplete="current-password"
+                            [class.is-invalid]="submitted && password?.invalid" />
+                        @if (submitted && password?.invalid && password?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (password?.errors?.['required']) {
+                            <div>Password is required.</div>
+                            }
+                            @if (password?.errors?.['minlength']) {
+                            <div>Password must be at least 8 characters.</div>
+                            }
+                        </div>
+                        }
+                    </div>
+                    } @else {
+                    <div class="mb-3">
+                        <label for="sign-in-phone" class="form-label">Phone</label>
+                        <input id="sign-in-phone" type="tel" class="form-control" formControlName="phone"
+                            placeholder="+91 xxxxxxxxxx" autocomplete="tel"
+                            [class.is-invalid]="submitted && phone?.invalid" />
+                        @if (submitted && phone?.invalid && phone?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (phone?.errors?.['required']) {
+                            <div>Phone is required.</div>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sign-in-code" class="form-label">Code</label>
+                        <input id="sign-in-code" type="text" class="form-control" formControlName="code"
+                            placeholder="xxxxxx" autocomplete="one-time-code"
+                            [class.is-invalid]="submitted && code?.invalid" />
+                        @if (submitted && code?.invalid && code?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (code?.errors?.['required']) {
+                            <div>Code is required.</div>
+                            }
+                            @if (code?.errors?.['minlength'] && code?.errors?.['minlength'] !== 6) {
+                            <div>Code must be 6 digits.</div>
+                            }
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    <div class="mb-3 text-end">
+                        <a href="#" class="small text-decoration-none" (click)="$event.preventDefault()">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading">
+                        @if (loading) {
+                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        }
+                        Sign in
+                    </button>
+                </form>
+
+                <p class="text-center text-body-secondary small mt-4 mb-0">
+                    Don't have an account?
+                    <a routerLink="/login/sign-up" class="fw-semibold text-decoration-none">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

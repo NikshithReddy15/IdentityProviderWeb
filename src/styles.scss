@@ -1,1 +1,300 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================
+   Messaging app – Light & Dark mode themes
+   Uses Bootstrap 5.3 (from index.html) + data-bs-theme
+   ============================================ */
+
+:root,
+[data-bs-theme="light"] {
+    color-scheme: light;
+    /* Custom theme tokens */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f7;
+    /* soft background accent (light) */
+    --bg-soft: #dce9fc;
+    --bg-tertiary: #e8e8ed;
+    --surface: #ffffff;
+    --surface-elevated: #ffffff;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #86868b;
+    --border: #d2d2d7;
+    --border-subtle: #e8e8ed;
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-muted: #e8f4fd;
+    --input-bg: #ffffff;
+    --input-border: #d2d2d7;
+    --input-focus-ring: #0071e3;
+    --error: #ff3b30;
+    --success: #34c759;
+    --shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --base-font-size: 16px;
+
+    /* Bootstrap 5.3 overrides – align with our light theme */
+    --bs-body-bg: #ffffff;
+    --bs-body-color: #1d1d1f;
+    --bs-primary: #0071e3;
+    --bs-primary-rgb: 0, 113, 227;
+    --bs-secondary-color: #6e6e73;
+    --bs-secondary-rgb: 110, 110, 115;
+    --bs-border-color: #d2d2d7;
+    --bs-border-color-translucent: rgba(210, 210, 215, 0.5);
+    --bs-link-color: #0071e3;
+    --bs-link-hover-color: #0077ed;
+    --bs-form-valid-color: #34c759;
+    --bs-form-invalid-color: #ff3b30;
+}
+
+[data-bs-theme="dark"],
+.dark {
+    color-scheme: dark;
+    --bg-primary: #0d0d0f;
+    --bg-secondary: #262626;
+    /* soft background accent (dark inverse) */
+    --bg-soft: #062033;
+    --bg-tertiary: #2c2c2e;
+    --surface: #1c1c1e;
+    --surface-elevated: #2c2c2e;
+    --text-primary: #f5f5f7;
+    --text-secondary: #a1a1a6;
+    --text-tertiary: #6e6e73;
+    --border: #38383a;
+    --border-subtle: #2c2c2e;
+    --accent: #0a84ff;
+    --accent-hover: #409cff;
+    --accent-muted: #1c2835;
+    --input-bg: #1c1c1e;
+    --input-border: #38383a;
+    --input-focus-ring: #0a84ff;
+    --error: #ff453a;
+    --success: #32d74b;
+    --shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+    /* Bootstrap 5.3 dark theme overrides */
+    --bs-body-bg: #0d0d0f;
+    --bs-body-color: #f5f5f7;
+    --bs-primary: #0a84ff;
+    --bs-primary-rgb: 10, 132, 255;
+    --bs-secondary-color: #a1a1a6;
+    --bs-secondary-rgb: 161, 161, 166;
+    --bs-border-color: #38383a;
+    --bs-border-color-translucent: rgba(56, 56, 58, 0.5);
+    --bs-link-color: #0a84ff;
+    --bs-link-hover-color: #409cff;
+    --bs-form-valid-color: #32d74b;
+    --bs-form-invalid-color: #ff453a;
+}
+
+/* Base application styles – Bootstrap body vars + our theme */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bs-body-bg, var(--bg-primary));
+    color: var(--bs-body-color, var(--text-primary));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   Login shell
+   ============================================ */
+.login-shell {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: var(--bg-soft);
+}
+
+/* ============================================
+   Sign-in page (consolidated)
+   ============================================ */
+.sign-in {
+    // @media (max-width: 576px) {
+    //     .card {
+    //     margin: 0 12px;
+    //     }
+    //     .card-body {
+    //     padding: 24px;
+    //     }
+    // }
+
+    /* Card surface */
+    .card {
+        background-color: var(--surface);
+        border-color: var(--border-subtle);
+        max-width: 420px;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .card-body {
+        padding: 24px;
+    }
+
+    /* Headings & helper text */
+    .text-center h1.h3 {
+        font-size: 28px;
+        line-height: 1.15;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    .text-body-secondary {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: var(--text-secondary);
+    }
+
+    /* Form labels & controls */
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .form-control {
+        height: 48px;
+        padding: 12px 12px;
+        font-size: 16px;
+        border-radius: 12px;
+        background-color: var(--input-bg);
+        border: 1px solid var(--input-border);
+    }
+    .form-control::placeholder {
+        color: var(--text-tertiary);
+    }
+    .form-control:focus {
+        border-color: var(--input-focus-ring);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    .invalid-feedback {
+        font-size: 12px;
+    }
+
+    /* Buttons & links */
+    .btn-primary {
+        height: 48px;
+        font-size: 16px;
+        border-radius: 12px;
+        padding: 0 16px;
+        font-weight: 600;
+        box-shadow: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+    .btn-primary:hover:not(:disabled) {
+        background-color: var(--accent-hover);
+        border-color: var(--accent-hover);
+    }
+    .btn-primary .spinner-border {
+        width: 16px;
+        height: 16px;
+    }
+
+    a {
+        color: var(--accent);
+    }
+}
+
+/* Tabs - pill switcher (matches Figma reference) */
+[data-slot="tabs-list"] {
+    display: grid;
+    grid-template-columns: repeat(var(--tabs-count), 1fr);
+    gap: 0;
+    align-items: center;
+    justify-items: stretch;
+    width: 100%;
+    border-radius: 16px;
+    background: var(--bg-secondary);
+    margin-bottom: 16px;
+    box-sizing: border-box;
+
+    [data-slot="tabs-trigger"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        border: none;
+        margin: 0;
+        padding: 4px 12px;
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+        min-width: calc(100% / var(--tabs-count));
+        max-width: calc(100% / var(--tabs-count));
+
+        &[data-state="active"] {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        &:focus-visible {
+        outline: 4px solid rgba(var(--bs-primary-rgb), 0.12);
+            outline-offset: 2px;
+        }
+    }
+
+    /* sliding indicator inside the tabs container */
+    .tabs-indicator {
+        
+        --tab-width: calc(((100% - (var(--tabs-padding-width) * 2 * 1px)) / var(--tabs-count)));
+        position: absolute;
+        height: calc((var(--tabs-height) * 1px) + ((var(--tabs-padding-height) * 1px) * 2));
+        width: var(--tab-width);
+        background: var(--surface);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        transition: left 400ms cubic-bezier(.2,.8,.2,1), width 200ms ease;
+        z-index: 0;
+        pointer-events: none;
+        --tab-index: attr(data-pos);
+        left: calc((var(--tabs-padding-width) * 1px) + (var(--tab-width) * var(--tab-index)));
+    }
+}
+
+/* ============================================
+   Sign-up page
+   ============================================ */
+.sign-up {
+    @media (max-width: 576px) {
+        .card {
+            margin: 0 12px;
+        }
+        .card-body {
+            padding: 24px;
+        }
+    }
+
+    .card {
+        background-color: var(--surface);
+        border-color: var(--border-subtle);
+    }
+    a {
+        color: var(--accent);
+    }
+}
