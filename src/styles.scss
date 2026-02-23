@@ -117,18 +117,9 @@ body {
 }
 
 /* ============================================
-   Sign-in page (consolidated)
+   Sign-in & Sign-up pages
    ============================================ */
-.sign-in {
-    // @media (max-width: 576px) {
-    //     .card {
-    //     margin: 0 12px;
-    //     }
-    //     .card-body {
-    //     padding: 24px;
-    //     }
-    // }
-
+.sign-in, .sign-up {
     /* Card surface */
     .card {
         background-color: var(--surface);
@@ -180,6 +171,32 @@ body {
     .form-control:focus {
         border-color: var(--input-focus-ring);
         box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    .input-group .form-select,
+    .input-group .form-control {
+        border-color: var(--input-border);
+    }
+
+    .input-group .form-select.form-select-sm {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+    }
+
+    .input-group .form-control.form-control-sm {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+
+    .input-group .form-control:focus,
+    .input-group .form-select:focus {
+        border-color: var(--input-focus-ring);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        z-index: 1;
     }
 
     .invalid-feedback {
@@ -274,27 +291,5 @@ body {
         pointer-events: none;
         --tab-index: attr(data-pos);
         left: calc((var(--tabs-padding-width) * 1px) + (var(--tab-width) * var(--tab-index)));
-    }
-}
-
-/* ============================================
-   Sign-up page
-   ============================================ */
-.sign-up {
-    @media (max-width: 576px) {
-        .card {
-            margin: 0 12px;
-        }
-        .card-body {
-            padding: 24px;
-        }
-    }
-
-    .card {
-        background-color: var(--surface);
-        border-color: var(--border-subtle);
-    }
-    a {
-        color: var(--accent);
     }
 }

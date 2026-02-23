@@ -1,15 +1,136 @@
 <div class="sign-up container">
     <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
-            <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
-                <div class="card-body p-4 p-md-5 text-center">
-                    <h1 class="h3 fw-semibold mb-2">Sign up</h1>
-                    <p class="text-body-secondary small mb-4">Create an account to get started.</p>
-                    <p class="text-body-secondary small mb-0">
-                        Already have an account?
-                        <a routerLink="/login/sign-in" class="fw-semibold text-decoration-none">Sign in</a>
-                    </p>
+        <div class="card border-0 rounded-3 p-0">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <h1 class="h3 fw-semibold mb-1">Sign up</h1>
+                    <p class="text-body-secondary small mb-0">Create an account to get started.</p>
                 </div>
+
+                @if (error) {
+                <div class="alert alert-danger py-2 small" role="alert">
+                    {{ error }}
+                </div>
+                }
+
+                <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" novalidate>
+                    <div class="row g-2">
+                        <div class="col-md-4 mb-3">
+                            <label for="sign-up-first-name" class="form-label">First name</label>
+                            <input id="sign-up-first-name" type="text" class="form-control" formControlName="firstName"
+                                placeholder="First name" autocomplete="given-name" [class.is-invalid]="submitted && signUpForm.get('firstName')?.invalid" />
+                            @if (submitted && signUpForm.get('firstName')?.invalid) {
+                            <div class="invalid-feedback d-block">First name is required.</div>
+                            }
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="sign-up-middle-name" class="form-label">Middle name (optional)</label>
+                            <input id="sign-up-middle-name" type="text" class="form-control" formControlName="middleName"
+                                placeholder="Middle name" autocomplete="additional-name" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="sign-up-last-name" class="form-label">Last name</label>
+                            <input id="sign-up-last-name" type="text" class="form-control" formControlName="lastName"
+                                placeholder="Last name" autocomplete="family-name" [class.is-invalid]="submitted && signUpForm.get('lastName')?.invalid" />
+                            @if (submitted && signUpForm.get('lastName')?.invalid) {
+                            <div class="invalid-feedback d-block">Last name is required.</div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sign-up-email" class="form-label">Email</label>
+                        <input id="sign-up-email" type="email" class="form-control" formControlName="email"
+                            placeholder="you@example.com" autocomplete="email" [class.is-invalid]="submitted && signUpForm.get('email')?.invalid" />
+                        @if (submitted && signUpForm.get('email')?.invalid && signUpForm.get('email')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (signUpForm.get('email')?.errors?.['required']) {
+                            <div>Email is required.</div>
+                            }
+                            @else if (signUpForm.get('email')?.errors?.['email']) {
+                            <div>Enter a valid email address.</div>
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Mobile number (optional)</label>
+                            <div class="input-group">
+                            <select class="form-select form-select-sm w-auto" formControlName="countryCode" aria-label="Country code" style="max-width:110px">
+                                    <option value="">Country</option>
+                                    <option value="+1">+1 (US)</option>
+                                    <option value="+44">+44 (UK)</option>
+                                    <option value="+91">+91 (IN)</option>
+                                    <option value="+61">+61 (AU)</option>
+                                    <option value="+49">+49 (DE)</option>
+                                </select>
+                                <input id="sign-up-mobile-number" type="tel" class="form-control form-control-sm" formControlName="mobileNumber"
+                                    placeholder="xxxxxxxxxx" autocomplete="tel" [class.is-invalid]="submitted && signUpForm.get('mobileNumber')?.invalid" />
+                            </div>
+                            @if (submitted && signUpForm.get('countryCode')?.invalid && signUpForm.get('countryCode')?.errors) {
+                            <div class="invalid-feedback d-block">
+                                @if (signUpForm.get('countryCode')?.errors?.['maxlength']) {
+                                <div>Country code must be at most 4 characters.</div>
+                                }
+                            </div>
+                            }
+                            @if (submitted && signUpForm.get('mobileNumber')?.invalid && signUpForm.get('mobileNumber')?.errors) {
+                            <div class="invalid-feedback d-block">
+                                @if (signUpForm.get('mobileNumber')?.errors?.['maxlength']) {
+                                <div>Mobile number must be at most 17 characters.</div>
+                                }
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sign-up-password" class="form-label">Password</label>
+                        <input id="sign-up-password" type="password" class="form-control" formControlName="password"
+                            placeholder="Create password" autocomplete="new-password" [class.is-invalid]="submitted && signUpForm.get('password')?.invalid" />
+                        @if (submitted && signUpForm.get('password')?.invalid && signUpForm.get('password')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (signUpForm.get('password')?.errors?.['required']) {
+                            <div>Password is required.</div>
+                            }
+                            @else if (signUpForm.get('password')?.errors?.['minlength']) {
+                            <div>Password must be at least 8 characters.</div>
+                            }
+                            @else if (signUpForm.get('password')?.errors?.['pattern']) {
+                            <div>Password must include upper, lower, number, and special character.</div>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sign-up-confirm-password" class="form-label">Confirm password</label>
+                        <input id="sign-up-confirm-password" type="password" class="form-control" formControlName="confirmPassword"
+                            placeholder="Confirm password" autocomplete="new-password" [class.is-invalid]="submitted && signUpForm.get('confirmPassword')?.invalid" />
+                        @if (submitted && signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (signUpForm.get('confirmPassword')?.errors?.['required']) {
+                            <div>Confirm your password.</div>
+                            }
+                            @else if (signUpForm.get('confirmPassword')?.errors?.['passwordMismatch']) {
+                            <div>Passwords do not match.</div>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading">
+                        @if (loading) {
+                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        }
+                        Create account
+                    </button>
+                </form>
+
+                <p class="text-center text-body-secondary small mt-4 mb-0">
+                    Already have an account?
+                    <a routerLink="/login/sign-in" class="fw-semibold text-decoration-none">Sign in</a>
+                </p>
             </div>
         </div>
     </div>

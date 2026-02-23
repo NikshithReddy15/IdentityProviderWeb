@@ -70,14 +70,27 @@
                     </div>
                     } @else {
                     <div class="mb-3">
-                        <label for="sign-in-phone" class="form-label">Phone</label>
-                        <input id="sign-in-phone" type="tel" class="form-control" formControlName="phone"
-                            placeholder="+91 xxxxxxxxxx" autocomplete="tel"
-                            [class.is-invalid]="submitted && phone?.invalid" />
+                        <label class="form-label">Phone</label>
+                        <div class="input-group">
+                            <select class="form-select form-select-sm w-auto" formControlName="countryCode" aria-label="Country code" style="max-width:110px">
+                                <option value="">Country</option>
+                                <option value="+1">+1 (US)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (IN)</option>
+                                <option value="+61">+61 (AU)</option>
+                                <option value="+49">+49 (DE)</option>
+                            </select>
+                            <input id="sign-in-phone" type="tel" class="form-control form-control-sm" formControlName="phone"
+                                placeholder="xxxxxxxxxx" autocomplete="tel"
+                                [class.is-invalid]="submitted && phone?.invalid" />
+                        </div>
                         @if (submitted && phone?.invalid && phone?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (phone?.errors?.['required']) {
                             <div>Phone is required.</div>
+                            }
+                            @if (phone?.errors?.['maxlength']) {
+                            <div>Phone must be at most 17 characters.</div>
                             }
                         </div>
                         }

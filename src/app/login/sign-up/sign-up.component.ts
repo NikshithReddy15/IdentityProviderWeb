@@ -19,16 +19,19 @@ export class SignUpComponent {
 
     constructor(private readonly fb: FormBuilder, private readonly registrationService: RegistrationService, private readonly router: Router) {
         this.signUpForm = this.fb.nonNullable.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
+            firstName: ['', [Validators.required, Validators.maxLength(64)]],
+            middleName: ['', Validators.maxLength(64)],
+            lastName: ['', [Validators.required, Validators.maxLength(64)]],
+            email: ['', [Validators.required, Validators.email, Validators.maxLength(64)]],
+            countryCode: ['+91', Validators.maxLength(4)],
+            mobileNumber: ['', Validators.maxLength(17)],
             password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
-            confirmPassword: ['', Validators.required, this.passwordValidator],
+            confirmPassword: ['', [Validators.required, this.passwordValidator.bind(this)]],
         });
     }
 
     passwordValidator(control: AbstractControl): ValidationErrors | null {
-        const password = this.signUpForm.get('password')?.value;
+        const password = this.signUpForm?.get('password')?.value;
         return password && control.value !== password ? { passwordMismatch: true } : null;
     }
 
@@ -43,11 +46,11 @@ export class SignUpComponent {
         }
         const dto: RegisterUserDto = {
             firstName: vals.firstName,
+            middleName: vals.middleName ?? null,
             lastName: vals.lastName,
-            middleName: null,
             email: vals.email,
-            countryCode: null,
-            mobileNumber: null,
+            countryCode: vals.countryCode ?? null,
+            mobileNumber: vals.mobileNumber ?? null,
             password: vals.password
         };
 
