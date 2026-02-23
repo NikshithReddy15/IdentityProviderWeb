@@ -4,3 +4,4 @@ export class EmailLoginDto {
     deviceId?: string;
     deviceName!: string;
 }
+

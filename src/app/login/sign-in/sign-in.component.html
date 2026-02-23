@@ -45,7 +45,7 @@
                             @if (email?.errors?.['required']) {
                             <div>Email is required.</div>
                             }
-                            @if (email?.errors?.['email']) {
+                            @else if (email?.errors?.['email']) {
                             <div>Enter a valid email address.</div>
                             }
                         </div>
@@ -62,7 +62,7 @@
                             @if (password?.errors?.['required']) {
                             <div>Password is required.</div>
                             }
-                            @if (password?.errors?.['minlength']) {
+                            @else if (password?.errors?.['minlength']) {
                             <div>Password must be at least 8 characters.</div>
                             }
                         </div>

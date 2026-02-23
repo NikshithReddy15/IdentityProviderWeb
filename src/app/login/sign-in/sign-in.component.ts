@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { EmailLoginDto } from '../models/email-login-dto.model';
-import { UtilsService } from '../../shared/services/util.service';
+
+import { EmailLoginDto } from '../models';
+import { LoginService } from '../services/login.service';
+import { UtilsService } from '../../shared/services/util/util.service';
 
 @Component({
     selector: 'app-sign-in',
@@ -20,7 +22,8 @@ export class SignInComponent {
 
     constructor(
         private readonly fb: FormBuilder,
-        private readonly router: Router
+        private readonly router: Router,
+        private readonly loginService: LoginService
     ) {
         this.signInForm = this.fb.nonNullable.group({
             email: [''],
@@ -28,7 +31,7 @@ export class SignInComponent {
             phone: [''],
             code: [''],
         });
-        this.useEmail(); // set initial validators
+        this.useEmail();
     }
 
     get email() {
@@ -54,22 +57,38 @@ export class SignInComponent {
         this.loading = true;
         const vals = this.signInForm.getRawValue();
         if (this.method === 'email') {
+            if (!vals.email || !vals.password) {
+                this.signInError = 'Email and password are required';
+                this.loading = false;
+                return;
+            }
+
             const dto = new EmailLoginDto();
-            dto.email = vals.email ?? '';
-            dto.password = vals.password ?? '';
+            dto.email = vals.email;
+            dto.password = vals.password;
             dto.deviceName = typeof navigator !== 'undefined' ? (navigator.userAgent || 'web') : 'web';
             dto.deviceId = UtilsService.generateGUID();
+            this.loginService.login(dto)
+                .subscribe({
+                    next: (tokens) => {
+                        localStorage.setItem('idp_jwt', tokens.jwtToken);
+                        localStorage.setItem('idp_refresh', tokens.refreshToken);
+                        this.router.navigateByUrl('/');
+                    },
+                    error: (err: any) => {
+                        this.signInError = err?.body?.message || err?.message || 'Sign in failed';
+                    },
+                }).add(() => (this.loading = false));
         } else if (this.method === 'phone') {
-            
+            this.loading = false;
         }
-        this.loading = false;
     }
 
-    switchMethod(m: 'email' | 'phone') {
-        if (m === this.method) return;
-        this.method = m;
+    switchMethod(signInMethod: 'email' | 'phone') {
+        if (signInMethod === this.method) return;
+        this.method = signInMethod;
         this.signInForm.reset();
-        if (m === 'email') {
+        if (signInMethod === 'email') {
             this.useEmail();
         } else {
             this.usePhone();
