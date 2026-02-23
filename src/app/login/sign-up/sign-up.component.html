@@ -14,28 +14,58 @@
                 }
 
                 <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" novalidate>
-                    <div class="row g-2">
-                        <div class="col-md-4 mb-3">
-                            <label for="sign-up-first-name" class="form-label">First name</label>
-                            <input id="sign-up-first-name" type="text" class="form-control" formControlName="firstName"
-                                placeholder="First name" autocomplete="given-name" [class.is-invalid]="submitted && signUpForm.get('firstName')?.invalid" />
-                            @if (submitted && signUpForm.get('firstName')?.invalid) {
-                            <div class="invalid-feedback d-block">First name is required.</div>
+                    <div class="mb-3">
+                        <label for="sign-up-first-name" class="form-label">First name</label>
+                        <input id="sign-up-first-name" type="text" class="form-control" formControlName="firstName"
+                            placeholder="First name" autocomplete="given-name" [class.is-invalid]="submitted && signUpForm.get('firstName')?.invalid" />
+                        @if (submitted && signUpForm.get('firstName')?.invalid && signUpForm.get('firstName')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (signUpForm.get('firstName')?.errors?.['required']) {
+                            <div>First name is required.</div>
+                            }
+                            @else if (signUpForm.get('firstName')?.errors?.['maxlength']) {
+                            <div>First name must be at most 64 characters.</div>
+                            }
+                            @else if (signUpForm.get('firstName')?.errors?.['pattern']) {
+                            <div>First name must contain only letters and spaces, each word starting with a capital letter.</div>
                             }
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="sign-up-middle-name" class="form-label">Middle name (optional)</label>
-                            <input id="sign-up-middle-name" type="text" class="form-control" formControlName="middleName"
-                                placeholder="Middle name" autocomplete="additional-name" />
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="sign-up-last-name" class="form-label">Last name</label>
-                            <input id="sign-up-last-name" type="text" class="form-control" formControlName="lastName"
-                                placeholder="Last name" autocomplete="family-name" [class.is-invalid]="submitted && signUpForm.get('lastName')?.invalid" />
-                            @if (submitted && signUpForm.get('lastName')?.invalid) {
-                            <div class="invalid-feedback d-block">Last name is required.</div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sign-up-middle-name" class="form-label">Middle name (optional)</label>
+                        <input id="sign-up-middle-name" type="text" class="form-control" formControlName="middleName"
+                            placeholder="Middle name" autocomplete="additional-name" [class.is-invalid]="submitted && signUpForm.get('middleName')?.invalid" />
+                        @if (submitted && signUpForm.get('middleName')?.invalid && signUpForm.get('middleName')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (signUpForm.get('middleName')?.errors?.['maxlength']) {
+                            <div>Middle name must be at most 64 characters.</div>
+                            }
+                            @else if (signUpForm.get('middleName')?.errors?.['pattern']) {
+                            <div>Middle name must contain only letters and spaces, each word starting with a capital letter.</div>
                             }
                         </div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sign-up-last-name" class="form-label">Last name</label>
+                        <input id="sign-up-last-name" type="text" class="form-control" formControlName="lastName"
+                            placeholder="Last name" autocomplete="family-name" [class.is-invalid]="submitted && signUpForm.get('lastName')?.invalid" />
+                        @if (submitted && signUpForm.get('lastName')?.invalid && signUpForm.get('lastName')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (signUpForm.get('lastName')?.errors?.['required']) {
+                            <div>Last name is required.</div>
+                            }
+                            @else if (signUpForm.get('lastName')?.errors?.['maxlength']) {
+                            <div>Last name must be at most 64 characters.</div>
+                            }
+                            @else if (signUpForm.get('lastName')?.errors?.['pattern']) {
+                            <div>Last name must contain only letters and spaces, each word starting with a capital letter.</div>
+                            }
+                        </div>
+                        }
                     </div>
 
                     <div class="mb-3">

@@ -19,9 +19,9 @@ export class SignUpComponent {
 
     constructor(private readonly fb: FormBuilder, private readonly registrationService: RegistrationService, private readonly router: Router) {
         this.signUpForm = this.fb.nonNullable.group({
-            firstName: ['', [Validators.required, Validators.maxLength(64)]],
-            middleName: ['', Validators.maxLength(64)],
-            lastName: ['', [Validators.required, Validators.maxLength(64)]],
+            firstName: ['', [Validators.required, Validators.maxLength(64), Validators.pattern(/^[A-Z][a-z]*(?:\s[A-Z][a-z]*)*$/)]],
+            middleName: ['', [Validators.maxLength(64), Validators.pattern(/^[A-Z][a-z]*(?:\s[A-Z][a-z]*)*$/)]],
+            lastName: ['', [Validators.required, Validators.maxLength(64), Validators.pattern(/^[A-Z][a-z]*(?:\s[A-Z][a-z]*)*$/)]],
             email: ['', [Validators.required, Validators.email, Validators.maxLength(64)]],
             countryCode: ['+91', Validators.maxLength(4)],
             mobileNumber: ['', Validators.maxLength(17)],

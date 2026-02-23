@@ -206,6 +206,7 @@ body {
     /* Buttons & links */
     .btn-primary {
         height: 48px;
+        width: 100%;
         font-size: 16px;
         border-radius: 12px;
         padding: 0 16px;
@@ -237,7 +238,7 @@ body {
     grid-template-columns: repeat(var(--tabs-count), 1fr);
     gap: 0;
     align-items: center;
-    justify-items: stretch;
+    justify-items: center;
     width: 100%;
     border-radius: 16px;
     background: var(--bg-secondary);
