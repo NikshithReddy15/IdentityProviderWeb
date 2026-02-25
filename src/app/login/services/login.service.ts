@@ -10,10 +10,11 @@ import { TokenDetailsDto } from '../../shared/models/token-details.model';
     providedIn: 'root'
 })
 export class LoginService {
+    private readonly baseUrl: string = '/api/login';
     constructor(private readonly api: ApiService) {}
 
     login(dto: EmailLoginDto): Observable<TokenDetailsDto> {
-        return this.api.post<TokenDetailsDto>('login', dto);
+        return this.api.post<TokenDetailsDto>(this.baseUrl, dto);
     }
 }
 

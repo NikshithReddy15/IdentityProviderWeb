@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 import { EmailLoginDto } from '../models';
+import { LoginType } from './models/login-type.enum';
 import { LoginService } from '../services/login.service';
 import { UtilsService } from '../../shared/services/util/util.service';
+import { NotificationService } from '../../shared/services/notification/notification.service';
+import { TokenDetailsDto } from '../../shared/models';
+import { NotificationType } from '../../shared/models/notification-type.enum';
 
 @Component({
     selector: 'app-sign-in',
@@ -13,108 +18,87 @@ import { UtilsService } from '../../shared/services/util/util.service';
     imports: [CommonModule, ReactiveFormsModule, RouterLink],
     templateUrl: './sign-in.component.html'
 })
-export class SignInComponent {
-    signInForm: FormGroup;
-    protected submitted = false;
-    protected signInError: string | null = null;
-    protected loading = false;
-    protected method: 'email' | 'phone' = 'email';
+export class SignInComponent implements OnInit {
+    emailForm!: FormGroup;
+    phoneForm!: FormGroup;
+
+    protected readonly submitted = signal(false);
+    protected readonly loading = signal(false);
+    protected readonly method = signal<LoginType>(LoginType.EMAIL);
+    // expose enum to template
+    protected readonly LoginType = LoginType;
+
+    get email() { return this.emailForm.get('email'); }
+    get password() { return this.emailForm.get('password'); }
+    get phone() { return this.phoneForm.get('phone'); }
+    get code() { return this.phoneForm.get('code'); }
 
     constructor(
         private readonly fb: FormBuilder,
         private readonly router: Router,
-        private readonly loginService: LoginService
-    ) {
-        this.signInForm = this.fb.nonNullable.group({
-            email: [''],
-            password: [''],
-            countryCode: ['+91'],
-            phone: [''],
-            code: [''],
+        private readonly loginService: LoginService,
+        private readonly notificationService: NotificationService
+    ) {}
+
+    ngOnInit(): void {
+        this.emailForm = this.fb.group({
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required]],
         });
-        this.useEmail();
+
+        this.phoneForm = this.fb.group({
+            countryCode: ['+91', [Validators.maxLength(4)]],
+            phone: ['', [Validators.required, Validators.maxLength(17)]],
+            code: ['', [Validators.required, Validators.minLength(6)]],
+        });
     }
 
-    get email() {
-        return this.signInForm.get('email');
-    }
-
-    get password() {
-        return this.signInForm.get('password');
-    }
-    get phone() {
-        return this.signInForm.get('phone');
-    }
-    get code() {
-        return this.signInForm.get('code');
-    }
-
-    onSubmit(): void {
-        this.submitted = true;
-        this.signInError = null;
-        if (this.signInForm.invalid) {
-            return;
-        }
-        this.loading = true;
-        const vals = this.signInForm.getRawValue();
-        if (this.method === 'email') {
+    signIn(): void {
+        this.submitted.set(true);
+        if (this.method() === LoginType.EMAIL) {
+            if (this.emailForm.invalid) return;
+            const vals = this.emailForm.getRawValue();
             if (!vals.email || !vals.password) {
-                this.signInError = 'Email and password are required';
-                this.loading = false;
+                this.notificationService.show('Email and password are required', NotificationType.ERROR);
                 return;
             }
+            this.loading.set(true);
+            const dto: EmailLoginDto = {
+                email: vals.email,
+                password: vals.password,
+                deviceName: typeof navigator !== 'undefined' ? (navigator.userAgent || 'web') : 'web',
+                deviceId: UtilsService.generateGUID(),
+            };
 
-            const dto = new EmailLoginDto();
-            dto.email = vals.email;
-            dto.password = vals.password;
-            dto.deviceName = typeof navigator !== 'undefined' ? (navigator.userAgent || 'web') : 'web';
-            dto.deviceId = UtilsService.generateGUID();
             this.loginService.login(dto)
+                .pipe(finalize(() => this.loading.set(false)))
                 .subscribe({
-                    next: (tokens) => {
+                    next: (tokens: TokenDetailsDto) => {
                         localStorage.setItem('idp_jwt', tokens.jwtToken);
                         localStorage.setItem('idp_refresh', tokens.refreshToken);
+                        this.notificationService.show('Signed in successfully', NotificationType.SUCCESS);
                         this.router.navigateByUrl('/');
                     },
                     error: (err: any) => {
-                        this.signInError = err?.body?.message || err?.message || 'Sign in failed';
-                    },
-                }).add(() => (this.loading = false));
-        } else if (this.method === 'phone') {
-            this.loading = false;
-        }
-    }
-
-    switchMethod(signInMethod: 'email' | 'phone') {
-        if (signInMethod === this.method) return;
-        this.method = signInMethod;
-        this.signInForm.reset();
-        if (signInMethod === 'email') {
-            this.useEmail();
+                        this.notificationService.show(err?.body?.message || err?.message || 'Sign in failed', NotificationType.ERROR);
+                    }
+                });
         } else {
-            this.usePhone();
+            if (this.phoneForm.invalid) return;
+            const vals = this.phoneForm.getRawValue();
+            // phone sign-in flow (stubbed): show notification for now
+            this.notificationService.show('Phone sign-in not implemented', NotificationType.INFO);
         }
     }
 
-    private useEmail() {
-        this.email?.setValidators([Validators.required, Validators.email]);
-        this.password?.setValidators([Validators.required, Validators.minLength(8)]);
-        this.phone?.clearValidators();
-        this.code?.clearValidators();
-        this.email?.updateValueAndValidity();
-        this.password?.updateValueAndValidity();
-        this.phone?.updateValueAndValidity();
-        this.code?.updateValueAndValidity();
-    }
-
-    private usePhone() {
-        this.phone?.setValidators([Validators.required]);
-        this.code?.setValidators([Validators.required, Validators.minLength(6)]);
-        this.email?.clearValidators();
-        this.password?.clearValidators();
-        this.email?.updateValueAndValidity();
-        this.password?.updateValueAndValidity();
-        this.phone?.updateValueAndValidity();
-        this.code?.updateValueAndValidity();
+    switchMethod(signInMethod: LoginType) {
+        if (signInMethod === this.method()) return;
+        this.method.set(signInMethod);
+        this.submitted.set(false);
+        this.emailForm.reset();
+        this.phoneForm.reset();
+        this.phoneForm.get('countryCode')?.setValue('+91');
+        this.emailForm.updateValueAndValidity();
+        this.phoneForm.updateValueAndValidity();
     }
 }

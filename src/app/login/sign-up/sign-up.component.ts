@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { RegistrationService } from '../services';
 import { RegisterUserDto } from '../models';
+import { NotificationService } from '../../shared/services/notification/notification.service';
+import { NotificationType } from '../../shared/models/notification-type.enum';
 
 @Component({
     selector: 'app-sign-up',
@@ -13,11 +15,16 @@ import { RegisterUserDto } from '../models';
 })
 export class SignUpComponent {
     protected signUpForm;
-    protected submitted = false;
-    protected loading = false;
-    protected error: string | null = null;
+    protected readonly submitted = signal(false);
+    protected readonly loading = signal(false);
+    protected readonly error = signal<string | null>(null);
 
-    constructor(private readonly fb: FormBuilder, private readonly registrationService: RegistrationService, private readonly router: Router) {
+    constructor(
+        private readonly fb: FormBuilder,
+        private readonly registrationService: RegistrationService,
+        private readonly router: Router,
+        private readonly notificationService: NotificationService
+    ) {
         this.signUpForm = this.fb.nonNullable.group({
             firstName: ['', [Validators.required, Validators.maxLength(64), Validators.pattern(/^[A-Z][a-z]*(?:\s[A-Z][a-z]*)*$/)]],
             middleName: ['', [Validators.maxLength(64), Validators.pattern(/^[A-Z][a-z]*(?:\s[A-Z][a-z]*)*$/)]],
@@ -36,12 +43,12 @@ export class SignUpComponent {
     }
 
     onSubmit(): void {
-        this.submitted = true;
-        this.error = null;
+        this.submitted.set(true);
+        this.error.set(null);
         if (this.signUpForm.invalid) return;
         const vals = this.signUpForm.getRawValue();
         if (vals.password !== vals.confirmPassword) {
-            this.error = 'Passwords do not match';
+            this.error.set('Passwords do not match');
             return;
         }
         const dto: RegisterUserDto = {
@@ -54,15 +61,18 @@ export class SignUpComponent {
             password: vals.password
         };
 
-        this.loading = true;
+        this.loading.set(true);
         this.registrationService.register(dto)
             .subscribe({
                 next: () => {
+                    this.notificationService.show('Account created successfully', NotificationType.SUCCESS);
                     this.router.navigateByUrl('/login/sign-in');
                 },
                 error: (err: any) => {
-                    this.error = err?.body?.message || err?.message || 'Registration failed';
+                    const msg = err?.body?.message || err?.message || 'Registration failed';
+                    this.error.set(msg);
+                    this.notificationService.show(msg, NotificationType.ERROR);
                 },
-            }).add(() => (this.loading = false));
+            }).add(() => this.loading.set(false));
     }
 }

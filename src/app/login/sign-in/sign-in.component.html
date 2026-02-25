@@ -7,40 +7,35 @@
                     <p class="text-body-secondary small mb-0">Welcome back to the messaging app</p>
                 </div>
 
-                @if (signInError) {
-                <div class="alert alert-danger py-2 small" role="alert">
-                    {{ signInError }}
-                </div>
-                }
-
                 <div role="tablist" aria-orientation="horizontal" data-slot="tabs-list"
                     class="bg-muted text-muted-foreground items-center justify-center rounded-xl grid w-full grid-cols-2 mb-6"
-                    tabindex="0" data-orientation="horizontal" style="outline: currentcolor;"
+                    [class.cursor-not-allowed]="loading()"
+                    tabindex="0" data-orientation="horizontal"
                     [style.--tabs-count]="2" [style.--tabs-height]="24" [style.--tabs-padding-height]="4" [style.--tabs-padding-width]="24">
-                    <button type="button" role="tab" [attr.aria-selected]="method==='email'"
-                        aria-controls="radix-:rl:-content-email" id="radix-:rl:-trigger-email"
-                        data-slot="tabs-trigger" [attr.data-state]="method==='email' ? 'active' : 'inactive'"
-                        tabindex="{{ method==='email' ? 0 : -1 }}" (click)="switchMethod('email')">
+                    <button type="button" role="tab" [attr.aria-selected]="method() === LoginType.EMAIL"
+                        aria-controls="sign-in-panel-email" id="sign-in-tab-email"
+                        data-slot="tabs-trigger" [attr.data-state]="method() === LoginType.EMAIL ? 'active' : 'inactive'"
+                        [attr.tabindex]="method() === LoginType.EMAIL ? 0 : -1" (click)="switchMethod(LoginType.EMAIL)">
                         Email
                     </button>
-                    <button type="button" role="tab" [attr.aria-selected]="method==='phone'"
-                        aria-controls="radix-:rl:-content-phone" id="radix-:rl:-trigger-phone"
-                        data-slot="tabs-trigger" [attr.data-state]="method==='phone' ? 'active' : 'inactive'"
-                        tabindex="{{ method==='phone' ? 0 : -1 }}" (click)="switchMethod('phone')">
+                    <button type="button" role="tab" [attr.aria-selected]="method() === LoginType.PHONE"
+                        aria-controls="sign-in-panel-phone" id="sign-in-tab-phone"
+                        data-slot="tabs-trigger" [attr.data-state]="method() === LoginType.PHONE ? 'active' : 'inactive'"
+                        [attr.tabindex]="method() === LoginType.PHONE ? 0 : -1" (click)="switchMethod(LoginType.PHONE)">
                         Phone
                     </button>
-                    <div class="tabs-indicator" [attr.data-pos]="method === 'email' ? '0' : 1"
-                        [style.--tab-index]="method === 'email' ? 0 : 1"></div>
+                    <div class="tabs-indicator"
+                        [style.--tab-index]="method() === LoginType.EMAIL ? 0 : 1"></div>
                 </div>
 
-                <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" novalidate>
-                    @if (method === 'email') {
+                @if (method() === LoginType.EMAIL) {
+                <form [formGroup]="emailForm" (ngSubmit)="signIn()">
                     <div class="mb-3">
                         <label for="sign-in-email" class="form-label">Email</label>
                         <input id="sign-in-email" type="email" class="form-control" formControlName="email"
                             placeholder="you@example.com" autocomplete="email"
-                            [class.is-invalid]="submitted && email?.invalid" />
-                        @if (submitted && email?.invalid && email?.errors) {
+                            [class.is-invalid]="submitted() && email?.invalid" />
+                        @if (submitted() && email?.invalid && email?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (email?.errors?.['required']) {
                             <div>Email is required.</div>
@@ -56,19 +51,31 @@
                         <label for="sign-in-password" class="form-label">Password</label>
                         <input id="sign-in-password" type="password" class="form-control" formControlName="password"
                             placeholder="••••••••" autocomplete="current-password"
-                            [class.is-invalid]="submitted && password?.invalid" />
-                        @if (submitted && password?.invalid && password?.errors) {
+                            [class.is-invalid]="submitted() && password?.invalid" />
+                        @if (submitted() && password?.invalid && password?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (password?.errors?.['required']) {
                             <div>Password is required.</div>
                             }
-                            @else if (password?.errors?.['minlength']) {
-                            <div>Password must be at least 8 characters.</div>
-                            }
                         </div>
                         }
                     </div>
-                    } @else {
+
+                    <div class="mb-3 text-end">
+                        <a href="#" class="small text-decoration-none" (click)="$event.preventDefault()">
+                            Forgot password?
+                        </a>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading()">
+                        @if (loading()) {
+                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        }
+                        Sign in
+                    </button>
+                </form>
+                }
+                @else {
+                <form [formGroup]="phoneForm" (ngSubmit)="signIn()">
                     <div class="mb-3">
                         <label class="form-label">Phone</label>
                         <div class="input-group">
@@ -82,9 +89,9 @@
                             </select>
                             <input id="sign-in-phone" type="tel" class="form-control form-control-sm" formControlName="phone"
                                 placeholder="xxxxxxxxxx" autocomplete="tel"
-                                [class.is-invalid]="submitted && phone?.invalid" />
+                                [class.is-invalid]="submitted() && phone?.invalid" />
                         </div>
-                        @if (submitted && phone?.invalid && phone?.errors) {
+                        @if (submitted() && phone?.invalid && phone?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (phone?.errors?.['required']) {
                             <div>Phone is required.</div>
@@ -100,8 +107,8 @@
                         <label for="sign-in-code" class="form-label">Code</label>
                         <input id="sign-in-code" type="text" class="form-control" formControlName="code"
                             placeholder="xxxxxx" autocomplete="one-time-code"
-                            [class.is-invalid]="submitted && code?.invalid" />
-                        @if (submitted && code?.invalid && code?.errors) {
+                            [class.is-invalid]="submitted() && code?.invalid" />
+                        @if (submitted() && code?.invalid && code?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (code?.errors?.['required']) {
                             <div>Code is required.</div>
@@ -112,21 +119,14 @@
                         </div>
                         }
                     </div>
-                    }
-
-                    <div class="mb-3 text-end">
-                        <a href="#" class="small text-decoration-none" (click)="$event.preventDefault()">
-                            Forgot password?
-                        </a>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading">
-                        @if (loading) {
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading()">
+                        @if (loading()) {
                         <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
                         }
                         Sign in
                     </button>
                 </form>
+                }
 
                 <p class="text-center text-body-secondary small mt-4 mb-0">
                     Don't have an account?

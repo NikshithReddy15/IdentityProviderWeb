@@ -1,59 +1,63 @@
 # ChatApplication
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+ChatApplication is a small Angular 21 web client that implements a tiled login experience (email / phone), a notification system, and zoneless change-detection using Angular Signals.
 
-## Development server
+This README covers how to run the app locally, development conveniences, and where to find the important parts of the codebase.
 
-To start a local development server, run:
+Quick links
+- Project root: `src/`
+- Login UI: `src/app/login/sign-in/`
+- Sign-up: `src/app/login/sign-up/`
+- Notifications: `src/app/shared/services/notification/` and `src/app/shared/components/notification/`
+- Global styles: `src/styles.scss`
 
+Prerequisites
+- Node >= 18 and npm (this project uses npm as the package manager)
+- Angular CLI (dev dependency) for local commands if you prefer `ng` directly
+
+Install
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+Development server
+- Start with the provided script (the project runs with a local HTTPS dev server by default):
 ```bash
-ng generate component component-name
+npm start
+# -> runs: ng serve --proxy-config proxy.conf.js --ssl true
 ```
+- Open: https://localhost:4200/
+- The dev server watches files and rebuilds automatically.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Available scripts
+- `npm start` — run dev server (with proxy and HTTPS as configured)
+- `npm run build` — produce production build in `dist/`
+- `npm run watch` — continuous build in development mode
+- `npm test` — run unit tests (Vitest)
+- `npm run serve:ssr:ChatApplication` — run SSR server from `dist/ChatApplication` (after building)
 
-```bash
-ng generate --help
-```
+Architecture notes
+- Angular 21 signals & zoneless CD: this app uses `provideZonelessChangeDetection()` (see `src/app/app.config.ts`) and migrates component state to Signals where appropriate (e.g. loading/submitted in the sign-in flow). Signals remove reliance on zone.js for change detection and provide a predictable reactive model.
+- Notification system: `NotificationService` exposes a readonly signal that the `NotificationComponent` reads directly in the template. See `src/app/shared/services/notification/notification.service.ts`.
+- Login flows: sign-in is split into email and phone forms in `src/app/login/sign-in/`. DTOs and services live in `src/app/login/`.
+- Styling: all SCSS has been consolidated into `src/styles.scss` which also overrides Bootstrap variables for theming.
 
-## Building
+Development tips & debugging
+- If UI updates appear delayed, confirm you are running the zoneless flow (we use signals). If you manually changed HTTP behavior to use native fetch (via `provideHttpClient(withFetch())`), that's compatible with zoneless mode.
+- For temporary diagnostics we log to a session debug file in the workspace during active debugging sessions: `.cursor/debug-<id>.log`. These entries are added only while instrumentation is present and removed when debugging is finished.
 
-To build the project run:
+Proxy & API
+- The dev server uses `proxy.conf.js` to proxy API requests in development. Update that file if your backend runs on another host/port.
 
-```bash
-ng build
-```
+Testing
+- Unit tests: `npm test` (Vitest)
+- E2E: configure and run your chosen runner (Playwright, Cypress, etc.)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Contributing
+- Follow the project's Prettier settings (tabWidth 4). Run the app and tests locally, open a pull request with focused changes, and include a short test plan in the PR body.
 
-## Running unit tests
+Notes
+- This README is intentionally minimal — for design/token details, architecture diagrams, or API contracts, check the `docs/` folder if present or ask the team for API specs.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+License
+- MIT (or your preferred license)

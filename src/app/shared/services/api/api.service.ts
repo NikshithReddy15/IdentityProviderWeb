@@ -20,7 +20,7 @@ export class ApiService implements IApiService {
 
     constructor(private readonly http: HttpClient) {
         const origin = typeof window !== 'undefined' ? window.location.origin : '';
-        this.baseUrl = `${origin.replace(/\/$/, '')}/api`;
+        this.baseUrl = `${origin.replace(/\/$/, '')}/k/identity`;
     }
 
     private buildUrl(path: string) {

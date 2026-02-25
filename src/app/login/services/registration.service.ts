@@ -9,10 +9,11 @@ import { RegisterUserDto } from '../models/register-user.model';
     providedIn: 'root'
 })
 export class RegistrationService {
+    private readonly baseUrl: string = '/api/user/registration';
     constructor(private readonly api: ApiService) {}
 
     register(dto: RegisterUserDto): Observable<void> {
-        return this.api.post<void>('user/registration', dto);
+        return this.api.post<void>(this.baseUrl, dto);
     }
 }
 
