@@ -1,15 +1,14 @@
 /* ============================================
-   Messaging app – Light & Dark mode themes
-   Uses Bootstrap 5.3 (from index.html) + data-bs-theme
+   Light & Dark mode themes
+   Bootstrap 5.3 + data-bs-theme
    ============================================ */
 
 :root,
 [data-bs-theme="light"] {
     color-scheme: light;
-    /* Custom theme tokens */
+
     --bg-primary: #ffffff;
     --bg-secondary: #f5f5f7;
-    /* soft background accent (light) */
     --bg-soft: #dce9fc;
     --bg-tertiary: #e8e8ed;
     --surface: #ffffff;
@@ -27,6 +26,8 @@
     --input-focus-ring: #0071e3;
     --error: #ff3b30;
     --success: #34c759;
+    --icon-color: #6e6e73;
+    --icon-color-muted: #86868b;
     --shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -38,7 +39,6 @@
     --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
     --base-font-size: 16px;
 
-    /* Bootstrap 5.3 overrides – align with our light theme */
     --bs-body-bg: #ffffff;
     --bs-body-color: #1d1d1f;
     --bs-primary: #0071e3;
@@ -56,9 +56,9 @@
 [data-bs-theme="dark"],
 .dark {
     color-scheme: dark;
+
     --bg-primary: #0d0d0f;
     --bg-secondary: #262626;
-    /* soft background accent (dark inverse) */
     --bg-soft: #062033;
     --bg-tertiary: #2c2c2e;
     --surface: #1c1c1e;
@@ -76,11 +76,12 @@
     --input-focus-ring: #0a84ff;
     --error: #ff453a;
     --success: #32d74b;
+    --icon-color: #a1a1a6;
+    --icon-color-muted: #6e6e73;
     --shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
 
-    /* Bootstrap 5.3 dark theme overrides */
     --bs-body-bg: #0d0d0f;
     --bs-body-color: #f5f5f7;
     --bs-primary: #0a84ff;
@@ -95,7 +96,10 @@
     --bs-form-invalid-color: #ff453a;
 }
 
-/* Base application styles – Bootstrap body vars + our theme */
+/* ============================================
+   Base styles
+   ============================================ */
+
 html,
 body {
     margin: 0;
@@ -107,9 +111,58 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+*,
+*::before,
+*::after {
+    transition: background-color 800ms ease, border-color 800ms ease, box-shadow 800ms ease;
+}
+
+.bi {
+    color: var(--icon-color);
+}
+
+button .bi,
+.btn .bi {
+    color: inherit;
+}
+
+/* ============================================
+   Theme toggle
+   ============================================ */
+
+.theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: var(--shadow-md);
+    background-color: var(--surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+    z-index: 1000;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+    background-color: var(--surface-elevated);
+}
+
+.theme-toggle:focus {
+    box-shadow: var(--shadow-lg), 0 0 0 0.2rem rgba(0, 113, 227, 0.25);
+}
+
 /* ============================================
    Login shell
    ============================================ */
+
 .login-shell {
     padding-top: 40px;
     padding-bottom: 40px;
@@ -119,11 +172,11 @@ body {
 /* ============================================
    Sign-in & Sign-up pages
    ============================================ */
-.sign-in, .sign-up {
-    /* Card surface */
+
+.sign-in,
+.sign-up {
     .card {
         background-color: var(--surface);
-        border-color: var(--border-subtle);
         max-width: 420px;
         margin: 0 auto;
         border-radius: 12px;
@@ -136,20 +189,18 @@ body {
         padding: 24px;
     }
 
-    /* Headings & helper text */
     .text-center h1.h3 {
         font-size: 28px;
         line-height: 1.15;
         margin-bottom: 8px;
         font-weight: 600;
     }
+
     .text-body-secondary {
         font-size: 16px;
-        margin-bottom: 20px;
         color: var(--text-secondary);
     }
 
-    /* Form labels & controls */
     .form-label {
         color: var(--text-primary);
         font-weight: 500;
@@ -157,20 +208,23 @@ body {
         margin-bottom: 8px;
         display: block;
     }
+
     .form-control {
         height: 48px;
-        padding: 12px 12px;
+        padding: 12px;
         font-size: 16px;
         border-radius: 12px;
         background-color: var(--input-bg);
         border: 1px solid var(--input-border);
     }
+
     .form-control::placeholder {
         color: var(--text-tertiary);
     }
+
     .form-control:focus {
         border-color: var(--input-focus-ring);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
     }
 
     .input-group .form-select,
@@ -179,23 +233,17 @@ body {
     }
 
     .input-group .form-select.form-select-sm {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-top-left-radius: 12px;
-        border-bottom-left-radius: 12px;
+        border-radius: 12px 0 0 12px;
     }
 
     .input-group .form-control.form-control-sm {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        border-top-right-radius: 12px;
-        border-bottom-right-radius: 12px;
+        border-radius: 0 12px 12px 0;
     }
 
     .input-group .form-control:focus,
     .input-group .form-select:focus {
         border-color: var(--input-focus-ring);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
         z-index: 1;
     }
 
@@ -203,7 +251,18 @@ body {
         font-size: 12px;
     }
 
-    /* Buttons & links */
+    .input-group-text {
+        background-color: var(--bg-secondary);
+        border-color: var(--input-border);
+        color: var(--icon-color);
+        border-radius: 12px 0 0 12px;
+    }
+
+    .input-group-text .bi {
+        font-size: 16px;
+        color: var(--icon-color);
+    }
+
     .btn-primary {
         height: 48px;
         width: 100%;
@@ -218,10 +277,12 @@ body {
         background-color: var(--accent);
         border-color: var(--accent);
     }
+
     .btn-primary:hover:not(:disabled) {
         background-color: var(--accent-hover);
         border-color: var(--accent-hover);
     }
+
     .btn-primary .spinner-border {
         width: 16px;
         height: 16px;
@@ -232,18 +293,20 @@ body {
     }
 }
 
-/* Tabs - pill switcher (matches Figma reference) */
+/* ============================================
+   Tabs switcher
+   ============================================ */
+
 [data-slot="tabs-list"] {
     display: grid;
     grid-template-columns: repeat(var(--tabs-count), 1fr);
-    gap: 0;
     align-items: center;
     justify-items: center;
     width: 100%;
     border-radius: 16px;
     background: var(--bg-secondary);
     margin-bottom: 16px;
-    box-sizing: border-box;
+    isolation: isolate;
 
     [data-slot="tabs-trigger"] {
         -webkit-appearance: none;
@@ -261,8 +324,7 @@ body {
         font-weight: 500;
         cursor: pointer;
         position: relative;
-        z-index: 1;
-        transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+        z-index: 2;
         min-width: calc(100% / var(--tabs-count));
         max-width: calc(100% / var(--tabs-count));
 
@@ -270,33 +332,46 @@ body {
             color: var(--text-primary);
             font-weight: 600;
         }
-        
+
         &:focus-visible {
-        outline: 4px solid rgba(var(--bs-primary-rgb), 0.12);
+            outline: 4px solid rgba(var(--bs-primary-rgb), 0.12);
             outline-offset: 2px;
         }
     }
 
-    /* sliding indicator inside the tabs container */
     .tabs-indicator {
-        
-        --tab-width: calc(((100% - (var(--tabs-padding-width) * 2 * 1px)) / var(--tabs-count)));
+        --tab-width: calc((100% - (var(--tabs-padding-width) * 2 * 1px)) / var(--tabs-count));
         position: absolute;
-        height: calc((var(--tabs-height) * 1px) + ((var(--tabs-padding-height) * 1px) * 2));
+        height: calc((var(--tabs-height) * 1px) + (var(--tabs-padding-height) * 2 * 1px));
         width: var(--tab-width);
         background: var(--surface);
         border-radius: 16px;
         border: 1px solid var(--border);
-        transition: left 400ms cubic-bezier(.2,.8,.2,1), width 200ms ease;
-        z-index: 0;
+        z-index: 1;
         pointer-events: none;
-        --tab-index: attr(data-pos);
         left: calc((var(--tabs-padding-width) * 1px) + (var(--tab-width) * var(--tab-index)));
+        transition: left 400ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 800ms ease, border-color 800ms ease;
     }
 }
+
+/* ============================================
+   Utilities
+   ============================================ */
 
 .cursor-not-allowed {
     cursor: not-allowed !important;
     opacity: 0.5 !important;
     pointer-events: none !important;
+}
+
+.input-group > app-country-code-picker + input.form-control {
+    border-left: 1px solid var(--border) !important;
+    margin-left: -1px;
+    position: relative;
+}
+
+.input-group > app-country-code-picker + input.form-control:focus {
+    z-index: 3;
+    border-color: var(--input-focus-ring) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 113, 227, 0.25);
 }

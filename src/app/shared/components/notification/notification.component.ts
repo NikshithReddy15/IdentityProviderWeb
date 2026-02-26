@@ -11,9 +11,14 @@ import { NotificationType } from '../../models/notification-type.enum';
     .notifications-wrapper { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
     .notification { display: flex; align-items: center; min-width: 280px; max-width: 360px; padding: 10px 12px; border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); color: #0b1226; background: #fff; border-left: 4px solid transparent; }
     .success { border-left-color: #34c759; }
+    .success .icon { color: #34c759; }
     .error { border-left-color: #ff3b30; }
+    .error .icon { color: #ff3b30; }
     .warning { border-left-color: #ff9500; }
-    .icon { font-size: 18px; margin-right: 10px; }
+    .warning .icon { color: #ff9500; }
+    .info { border-left-color: #007aff; }
+    .info .icon { color: #007aff; }
+    .icon { font-size: 14px; margin-right: 8px; }
     .message { flex: 1; font-size: 14px; }
     .close { background: transparent; border: none; color: inherit; font-size: 14px; cursor: pointer; }
     `]
@@ -24,13 +29,13 @@ export class NotificationComponent {
     getNotificationTypeIcon(type: NotificationType) {
         switch (type) {
             case NotificationType.SUCCESS:
-                return 'check-circle';
+                return 'bi bi-check-circle-fill';
             case NotificationType.ERROR:
-                return 'x-circle';
+                return 'bi bi-x-circle-fill';
             case NotificationType.WARNING:
-                return 'exclamation-circle';
+                return 'bi bi-exclamation-triangle-fill';
             case NotificationType.INFO:
-                return 'info-circle';
+                return 'bi bi-info-circle-fill';
         }
     }
 

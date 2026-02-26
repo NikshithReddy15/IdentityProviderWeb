@@ -1,2 +1,15 @@
 <app-notifications></app-notifications>
 <router-outlet></router-outlet>
+
+<button
+    type="button"
+    class="theme-toggle btn btn-outline-secondary"
+    (click)="toggleTheme()"
+    [attr.aria-label]="darkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+>
+    @if (darkMode()) {
+    <i class="bi bi-sun-fill"></i>
+    } @else {
+    <i class="bi bi-moon-fill"></i>
+    }
+</button>

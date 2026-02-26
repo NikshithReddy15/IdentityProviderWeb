@@ -11,11 +11,12 @@ import { UtilsService } from '../../shared/services/util/util.service';
 import { NotificationService } from '../../shared/services/notification/notification.service';
 import { TokenDetailsDto } from '../../shared/models';
 import { NotificationType } from '../../shared/models/notification-type.enum';
+import { CountryCodePickerComponent } from '../../shared/components/country-code-picker/country-code-picker.component';
 
 @Component({
     selector: 'app-sign-in',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, RouterLink],
+    imports: [CommonModule, ReactiveFormsModule, RouterLink, CountryCodePickerComponent],
     templateUrl: './sign-in.component.html'
 })
 export class SignInComponent implements OnInit {

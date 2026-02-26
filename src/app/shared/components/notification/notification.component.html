@@ -3,7 +3,7 @@
     <div class="notification" [class]="getNotificationTypeClass(notification.type)">
         <i class="icon" [class]="getNotificationTypeIcon(notification.type)"></i>
         <div class="message">{{notification.message}}</div>
-        <button class="close" (click)="dismiss(notification.id)">✕</button>
+        <button class="close" (click)="dismiss(notification.id)"><i class="bi bi-x"></i></button>
     </div>
     }
 </div>

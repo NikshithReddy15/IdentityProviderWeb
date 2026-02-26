@@ -16,8 +16,11 @@
                 <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
                     <div class="mb-3">
                         <label for="sign-up-first-name" class="form-label">First name</label>
-                        <input id="sign-up-first-name" type="text" class="form-control" formControlName="firstName"
-                            placeholder="First name" autocomplete="given-name" [class.is-invalid]="submitted() && signUpForm.get('firstName')?.invalid" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input id="sign-up-first-name" type="text" class="form-control" formControlName="firstName"
+                                placeholder="First name" autocomplete="given-name" [class.is-invalid]="submitted() && signUpForm.get('firstName')?.invalid" />
+                        </div>
                         @if (submitted() && signUpForm.get('firstName')?.invalid && signUpForm.get('firstName')?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (signUpForm.get('firstName')?.errors?.['required']) {
@@ -35,8 +38,11 @@
 
                     <div class="mb-3">
                         <label for="sign-up-middle-name" class="form-label">Middle name (optional)</label>
-                        <input id="sign-up-middle-name" type="text" class="form-control" formControlName="middleName"
-                            placeholder="Middle name" autocomplete="additional-name" [class.is-invalid]="submitted() && signUpForm.get('middleName')?.invalid" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input id="sign-up-middle-name" type="text" class="form-control" formControlName="middleName"
+                                placeholder="Middle name" autocomplete="additional-name" [class.is-invalid]="submitted() && signUpForm.get('middleName')?.invalid" />
+                        </div>
                         @if (submitted() && signUpForm.get('middleName')?.invalid && signUpForm.get('middleName')?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (signUpForm.get('middleName')?.errors?.['maxlength']) {
@@ -51,8 +57,11 @@
 
                     <div class="mb-3">
                         <label for="sign-up-last-name" class="form-label">Last name</label>
-                        <input id="sign-up-last-name" type="text" class="form-control" formControlName="lastName"
-                            placeholder="Last name" autocomplete="family-name" [class.is-invalid]="submitted() && signUpForm.get('lastName')?.invalid" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input id="sign-up-last-name" type="text" class="form-control" formControlName="lastName"
+                                placeholder="Last name" autocomplete="family-name" [class.is-invalid]="submitted() && signUpForm.get('lastName')?.invalid" />
+                        </div>
                         @if (submitted() && signUpForm.get('lastName')?.invalid && signUpForm.get('lastName')?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (signUpForm.get('lastName')?.errors?.['required']) {
@@ -70,8 +79,11 @@
 
                     <div class="mb-3">
                         <label for="sign-up-email" class="form-label">Email</label>
-                        <input id="sign-up-email" type="email" class="form-control" formControlName="email"
-                            placeholder="you@example.com" autocomplete="email" [class.is-invalid]="submitted() && signUpForm.get('email')?.invalid" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input id="sign-up-email" type="email" class="form-control" formControlName="email"
+                                placeholder="you@example.com" autocomplete="email" [class.is-invalid]="submitted() && signUpForm.get('email')?.invalid" />
+                        </div>
                         @if (submitted() && signUpForm.get('email')?.invalid && signUpForm.get('email')?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (signUpForm.get('email')?.errors?.['required']) {
@@ -83,41 +95,28 @@
                         </div>
                         }
                     </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-12">
-                            <label class="form-label">Mobile number (optional)</label>
-                            <div class="input-group">
-                            <select class="form-select form-select-sm w-auto" formControlName="countryCode" aria-label="Country code" style="max-width:110px">
-                                    <option value="">Country</option>
-                                    <option value="+1">+1 (US)</option>
-                                    <option value="+44">+44 (UK)</option>
-                                    <option value="+91">+91 (IN)</option>
-                                    <option value="+61">+61 (AU)</option>
-                                    <option value="+49">+49 (DE)</option>
-                                </select>
-                                <input id="sign-up-mobile-number" type="tel" class="form-control form-control-sm" formControlName="mobileNumber"
-                                    placeholder="xxxxxxxxxx" autocomplete="tel" [class.is-invalid]="submitted() && signUpForm.get('mobileNumber')?.invalid" />
-                            </div>
-                            @if (submitted() && signUpForm.get('countryCode')?.invalid && signUpForm.get('countryCode')?.errors) {
-                            <div class="invalid-feedback d-block">
-                                @if (signUpForm.get('countryCode')?.errors?.['maxlength']) {
-                                <div>Country code must be at most 4 characters.</div>
-                                }
-                            </div>
-                            }
-                            @if (submitted() && signUpForm.get('mobileNumber')?.invalid && signUpForm.get('mobileNumber')?.errors) {
-                            <div class="invalid-feedback d-block">
-                                @if (signUpForm.get('mobileNumber')?.errors?.['maxlength']) {
-                                <div>Mobile number must be at most 17 characters.</div>
-                                }
-                            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mobile number (optional)</label>
+                        <div class="input-group">
+                            <app-country-code-picker formControlName="countryCode"></app-country-code-picker>
+                            <input id="sign-up-mobile-number" type="tel" class="form-control" formControlName="mobileNumber"
+                                placeholder="Enter phone number" autocomplete="tel" [class.is-invalid]="submitted() && signUpForm.get('mobileNumber')?.invalid" />
+                        </div>
+                        @if (submitted() && signUpForm.get('mobileNumber')?.invalid && signUpForm.get('mobileNumber')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (signUpForm.get('mobileNumber')?.errors?.['maxlength']) {
+                            <div>Mobile number must be at most 17 characters.</div>
                             }
                         </div>
+                        }
                     </div>
                     <div class="mb-3">
                         <label for="sign-up-password" class="form-label">Password</label>
-                        <input id="sign-up-password" type="password" class="form-control" formControlName="password"
-                            placeholder="Create password" autocomplete="new-password" [class.is-invalid]="submitted() && signUpForm.get('password')?.invalid" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input id="sign-up-password" type="password" class="form-control" formControlName="password"
+                                placeholder="Create password" autocomplete="new-password" [class.is-invalid]="submitted() && signUpForm.get('password')?.invalid" />
+                        </div>
                         @if (submitted() && signUpForm.get('password')?.invalid && signUpForm.get('password')?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (signUpForm.get('password')?.errors?.['required']) {
@@ -135,8 +134,11 @@
 
                     <div class="mb-3">
                         <label for="sign-up-confirm-password" class="form-label">Confirm password</label>
-                        <input id="sign-up-confirm-password" type="password" class="form-control" formControlName="confirmPassword"
-                            placeholder="Confirm password" autocomplete="new-password" [class.is-invalid]="submitted() && signUpForm.get('confirmPassword')?.invalid" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input id="sign-up-confirm-password" type="password" class="form-control" formControlName="confirmPassword"
+                                placeholder="Confirm password" autocomplete="new-password" [class.is-invalid]="submitted() && signUpForm.get('confirmPassword')?.invalid" />
+                        </div>
                         @if (submitted() && signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.errors) {
                         <div class="invalid-feedback d-block">
                             @if (signUpForm.get('confirmPassword')?.errors?.['required']) {
@@ -152,6 +154,8 @@
                     <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading()">
                         @if (loading()) {
                         <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        } @else {
+                        <i class="bi bi-person-plus me-2"></i>
                         }
                         Create account
                     </button>

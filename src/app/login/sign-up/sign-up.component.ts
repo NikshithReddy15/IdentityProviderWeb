@@ -6,11 +6,12 @@ import { RegistrationService } from '../services';
 import { RegisterUserDto } from '../models';
 import { NotificationService } from '../../shared/services/notification/notification.service';
 import { NotificationType } from '../../shared/models/notification-type.enum';
+import { CountryCodePickerComponent } from '../../shared/components/country-code-picker/country-code-picker.component';
 
 @Component({
     selector: 'app-sign-up',
     standalone: true,
-    imports: [RouterLink, ReactiveFormsModule],
+    imports: [RouterLink, ReactiveFormsModule, CountryCodePickerComponent],
     templateUrl: './sign-up.component.html'
 })
 export class SignUpComponent {
