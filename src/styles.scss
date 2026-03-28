@@ -144,7 +144,7 @@ button .bi,
     box-shadow: var(--shadow-md);
     background-color: var(--surface);
     border-color: var(--border);
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     z-index: 1000;
     transition: transform 200ms ease, box-shadow 200ms ease, color 100ms ease, background-color 800ms ease;
 }
