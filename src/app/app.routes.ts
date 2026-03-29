@@ -21,6 +21,13 @@ export const routes: Routes = [
                         (m) => m.SignUpComponent
                     ),
             },
+            {
+                path: 'verify-otp',
+                loadComponent: () =>
+                    import('./login/verify-otp/verify-otp.component').then(
+                        (m) => m.VerifyOtpComponent
+                    ),
+            },
             { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
         ],
     },

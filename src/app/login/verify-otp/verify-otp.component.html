@@ -1,0 +1,71 @@
+<div class="verify-otp container">
+    <div class="row justify-content-center">
+        <div class="card border-0 rounded-3 p-0">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <h1 class="h3 fw-semibold mb-1">Verify your email</h1>
+                    <p class="text-body-secondary small mb-0">
+                        We sent a 6-digit code to <strong>{{ email() }}</strong>. Enter it below to activate your account.
+                    </p>
+                </div>
+
+                @if (error()) {
+                <div class="alert alert-danger py-2 small" role="alert">
+                    {{ error() }}
+                </div>
+                }
+
+                <form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+                    <div class="mb-4">
+                        <label for="verify-otp-code" class="form-label">Verification code</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                            <input id="verify-otp-code" type="text" inputmode="numeric" class="form-control"
+                                formControlName="otpCode" placeholder="000000" maxlength="6" autocomplete="one-time-code"
+                                [class.is-invalid]="submitted() && otpForm.get('otpCode')?.invalid" />
+                        </div>
+                        @if (submitted() && otpForm.get('otpCode')?.invalid && otpForm.get('otpCode')?.errors) {
+                        <div class="invalid-feedback d-block">
+                            @if (otpForm.get('otpCode')?.errors?.['required']) {
+                            <div>Verification code is required.</div>
+                            }
+                            @else if (otpForm.get('otpCode')?.errors?.['pattern'] || otpForm.get('otpCode')?.errors?.['minlength'] || otpForm.get('otpCode')?.errors?.['maxlength']) {
+                            <div>Enter the 6-digit code sent to your email.</div>
+                            }
+                        </div>
+                        }
+                        <div class="form-text">The code is valid for 10 minutes.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" [disabled]="loading()">
+                        @if (loading()) {
+                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        } @else {
+                        <i class="bi bi-check-circle me-2"></i>
+                        }
+                        Verify account
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <span class="text-body-secondary small">Didn't receive a code? </span>
+                    @if (resendCooldown() > 0) {
+                    <span class="small text-body-secondary">Resend in {{ resendCooldown() }}s</span>
+                    } @else {
+                    <button type="button" class="btn btn-link btn-sm p-0 fw-semibold text-decoration-none" (click)="onResend()" [disabled]="resending()">
+                        @if (resending()) {
+                        <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+                        }
+                        Resend code
+                    </button>
+                    }
+                </div>
+
+                <p class="text-center text-body-secondary small mt-3 mb-0">
+                    Entered the wrong email?
+                    <a routerLink="/login/sign-up" class="fw-semibold text-decoration-none">Sign up again</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

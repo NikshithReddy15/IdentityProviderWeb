@@ -52,13 +52,14 @@ export class SignUpComponent {
             this.error.set('Passwords do not match');
             return;
         }
+        const mobileNumber = vals.mobileNumber || null;
         const dto: RegisterUserDto = {
             firstName: vals.firstName,
-            middleName: vals.middleName ?? null,
+            middleName: vals.middleName || null,
             lastName: vals.lastName,
             email: vals.email,
-            countryCode: vals.countryCode ?? null,
-            mobileNumber: vals.mobileNumber ?? null,
+            countryCode: mobileNumber ? (vals.countryCode || null) : null,
+            mobileNumber,
             password: vals.password
         };
 
@@ -66,8 +67,8 @@ export class SignUpComponent {
         this.registrationService.register(dto)
             .subscribe({
                 next: () => {
-                    this.notificationService.show('Account created successfully', NotificationType.SUCCESS);
-                    this.router.navigateByUrl('/login/sign-in');
+                    this.notificationService.show('Account created! Check your email for the verification code.', NotificationType.SUCCESS);
+                    this.router.navigateByUrl('/login/verify-otp', { state: { email: dto.email } });
                 },
                 error: (err: any) => {
                     const msg = err?.body?.message || err?.message || 'Registration failed';

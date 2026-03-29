@@ -6,6 +6,7 @@ An Angular 21 Identity Provider web client featuring authentication flows, dark/
 
 - **Email & Phone Login** — Tab-based sign-in with email/password or phone/OTP
 - **User Registration** — Full sign-up form with validation
+- **Email OTP Verification** — 6-digit OTP verification step after registration, with 60-second resend cooldown
 - **Dark/Light Theme** — System preference detection with manual toggle
 - **Toast Notifications** — Signal-based notification system
 - **Server-Side Rendering** — Full SSR support with Express
@@ -16,6 +17,7 @@ An Angular 21 Identity Provider web client featuring authentication flows, dark/
 |------|-------------|
 | `src/app/login/sign-in/` | Sign-in component (email/phone tabs) |
 | `src/app/login/sign-up/` | Registration form |
+| `src/app/login/verify-otp/` | OTP verification after registration (with resend) |
 | `src/app/shared/components/notification/` | Toast notification component |
 | `src/app/shared/components/country-code-picker/` | Phone country code selector |
 | `src/styles.scss` | Global styles and theme variables |
@@ -86,7 +88,7 @@ Theme toggle persists to localStorage and respects system preference.
 |---------|---------|
 | `ApiService` | HTTP client wrapper (base: `/k/identity`) |
 | `LoginService` | Email login authentication |
-| `RegistrationService` | User registration |
+| `RegistrationService` | User registration, OTP verification, and OTP resend |
 | `NotificationService` | Toast notification management |
 
 ## API Proxy
