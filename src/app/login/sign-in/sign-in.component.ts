@@ -7,9 +7,9 @@ import { finalize } from 'rxjs/operators';
 import { EmailLoginDto } from '../models';
 import { LoginType } from './models/login-type.enum';
 import { LoginService } from '../services/login.service';
+import { AuthService } from '../../shared/services/auth/auth.service';
 import { UtilsService } from '../../shared/services/util/util.service';
 import { NotificationService } from '../../shared/services/notification/notification.service';
-import { TokenDetailsDto } from '../../shared/models';
 import { NotificationType } from '../../shared/models/notification-type.enum';
 import { CountryCodePickerComponent } from '../../shared/components/country-code-picker/country-code-picker.component';
 
@@ -38,6 +38,7 @@ export class SignInComponent implements OnInit {
         private readonly fb: FormBuilder,
         private readonly router: Router,
         private readonly loginService: LoginService,
+        private readonly authService: AuthService,
         private readonly notificationService: NotificationService
     ) {}
 
@@ -74,10 +75,8 @@ export class SignInComponent implements OnInit {
             this.loginService.login(dto)
                 .pipe(finalize(() => this.loading.set(false)))
                 .subscribe({
-                    next: (tokens: TokenDetailsDto) => {
-                        localStorage.setItem('idp_jwt', tokens.jwtToken);
-                        localStorage.setItem('idp_refresh', tokens.refreshToken);
-                        this.notificationService.show('Signed in successfully', NotificationType.SUCCESS);
+                    next: (tokens) => {
+                        this.authService.setTokens(tokens);
                         this.router.navigateByUrl('/');
                     },
                     error: (err: any) => {

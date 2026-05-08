@@ -7,6 +7,9 @@ An Angular 21 Identity Provider web client featuring authentication flows, dark/
 - **Email & Phone Login** — Tab-based sign-in with email/password or phone/OTP
 - **User Registration** — Full sign-up form with validation
 - **Email OTP Verification** — 6-digit OTP verification step after registration, with 60-second resend cooldown
+- **Auth Interceptor** — Attaches `Authorization: Bearer` header to all protected requests; proactively refreshes tokens expiring within 5 minutes
+- **Token Refresh** — 401 responses clear tokens and redirect to sign-in; proactive refresh keeps sessions alive
+- **Route Guard** — `authGuard` protects authenticated routes; redirects unauthenticated users to sign-in
 - **Dark/Light Theme** — System preference detection with manual toggle
 - **Toast Notifications** — Signal-based notification system
 - **Server-Side Rendering** — Full SSR support with Express
@@ -87,6 +90,7 @@ Theme toggle persists to localStorage and respects system preference.
 | Service | Purpose |
 |---------|---------|
 | `ApiService` | HTTP client wrapper (base: `/k/identity`) |
+| `AuthService` | Token storage, JWT expiry checking, refresh, and logout |
 | `LoginService` | Email login authentication |
 | `RegistrationService` | User registration, OTP verification, and OTP resend |
 | `NotificationService` | Toast notification management |
