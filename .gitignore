@@ -43,3 +43,7 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 .cursor/debug-*.log
+
+# Claude Code
+CLAUDE.md
+.claude/
