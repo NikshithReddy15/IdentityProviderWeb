@@ -93,6 +93,18 @@ export class SignInComponent implements OnInit {
 
     private getDeviceName(): string {
         if (typeof navigator === 'undefined') return 'Web';
+
+        const uaData = (navigator as any).userAgentData;
+        if (uaData) {
+            const platform: string = uaData.platform || 'Unknown OS';
+            const brands: { brand: string; version: string }[] = uaData.brands ?? [];
+            const meaningful = brands.filter((b) => !b.brand.includes('Not'));
+            const browser = meaningful.find((b) => b.brand !== 'Chromium')?.brand
+                ?? meaningful[0]?.brand
+                ?? 'Browser';
+            return `${browser} on ${platform}`;
+        }
+
         const ua = navigator.userAgent;
 
         let browser = 'Browser';
